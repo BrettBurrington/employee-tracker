@@ -1,6 +1,3 @@
-// db.js
-
-// Import the 'mysql2' module to connect to the MySQL database
 const mysql = require('mysql2');
 
 // MySQL database configuration
