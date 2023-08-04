@@ -97,10 +97,10 @@ async function showMainMenu() {
 
 // Main function to start the application
 async function main() {
-  console.log('Connecting to the database...');
+  console.log('Working...');
   await connectToDB(); // Connect to the database
 
-  console.log('Welcome to the Employee Tracker App!');
+  console.log('Welcome to Employee Tracker ');
   await showMainMenu(); // Show the main menu and handle user actions
 }
 
