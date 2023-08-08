@@ -34,6 +34,7 @@ async function viewEmployees() {
 // Function to add a new role
 async function addRole() {
   try {
+    // Prompt the user to enter role details
     const roleDetails = await inquirer.prompt([
       {
         type: 'input',
@@ -59,7 +60,6 @@ async function addRole() {
     );
 
     console.log('New role added successfully!');
-    await viewRoles(); // Show updated roles after adding
   } catch (error) {
     console.error('Error:', error.message);
   }
@@ -68,6 +68,7 @@ async function addRole() {
 // Function to add a new employee
 async function addEmployee() {
   try {
+    // Prompt the user to enter employee details
     const employeeDetails = await inquirer.prompt([
       {
         type: 'input',
@@ -79,23 +80,29 @@ async function addEmployee() {
         name: 'last_name',
         message: 'Enter the employee\'s last name:',
       },
-      // ... Prompt for other employee details like role ID and manager ID
+      {
+        type: 'input',
+        name: 'role_id',
+        message: 'Enter the role ID for the employee:',
+      },
+      {
+        type: 'input',
+        name: 'manager_id',
+        message: 'Enter the manager ID for the employee (optional):',
+      },
     ]);
 
     // Insert the new employee into the database
     await queryDatabase(
       'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)',
-      [employeeDetails.first_name, employeeDetails.last_name, role_id, manager_id]
+      [employeeDetails.first_name, employeeDetails.last_name, employeeDetails.role_id, employeeDetails.manager_id]
     );
 
     console.log('New employee added successfully!');
-    await viewEmployees(); // Show updated employees after adding
   } catch (error) {
     console.error('Error:', error.message);
   }
 }
-
-// ... (other functions like updateEmployeeRole and addDepartment can be added similarly)
 
 // Function to display the main menu and handle user actions
 async function showMainMenu() {
@@ -110,18 +117,35 @@ async function showMainMenu() {
           'View all roles',
           'View all employees',
           'Add a role',
-          'Add an employee', // Added "Add an employee" option to the main menu
+          'Add an employee', // Added the "Add an employee" option to the main menu
           'Exit',
         ],
       },
     ]);
 
     switch (answer.action) {
-      // ... (other cases)
-      case 'Add an employee':
-        await addEmployee(); // Call the addEmployee() function
+      case 'View all departments':
+        await viewDepartments();
         break;
-      // ... (other cases)
+      case 'View all roles':
+        await viewRoles();
+        break;
+      case 'View all employees':
+        await viewEmployees();
+        break;
+      case 'Add a role':
+        await addRole();
+        break;
+      case 'Add an employee': // When user selects "Add an employee", call the addEmployee() function
+        await addEmployee();
+        break;
+      case 'Exit':
+        console.log('Goodbye!');
+        closeConnection();
+        break;
+      default:
+        console.log('Invalid choice. Please select a valid option.');
+        await showMainMenu();
     }
   } catch (error) {
     console.error('Error:', error.message);
